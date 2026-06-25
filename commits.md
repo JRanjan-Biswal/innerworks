@@ -37,6 +37,45 @@ Things a human must do. "None" is valid.
 Cross-refs to other SHAs.
 ```
 
+## 2026-06-25 — fourth push to origin/main (1 commit)
+
+### 22131d8 — docs: expand project readme
+
+- **Full SHA:** 22131d88a4d8789d6a196cab8a765d9fc7706d76
+- **Branch:** main
+- **Pushed to:** origin/main
+- **Pushed at:** 2026-06-25T07:34:40Z
+- **Author:** jranjan <jranjan2017@gmail.com>
+- **Type:** docs
+- **Subject:** docs: expand project readme
+
+#### Task — context
+The user first asked to rewrite the README with the full flow and AI usage details, then clarified: "dont push anything right now, first show me once i give an approval then only push this to live". After reviewing the local README draft, the user approved with: "okay lets push this to live". This commit publishes the approved README rewrite to the public repository.
+
+#### Task — what changed
+- Docs: rewrote `README.md` as an extensive project handoff for Framekeep.
+- Docs: added a product summary, user flow, technical flow, state management explanation, API handling explanation, UI and UX direction, project structure, tradeoffs, and verification notes.
+- Docs: added a candid "Where AI Was Used" section that explains the app and logic were developed first, then local UI skills were used as a refinement layer.
+- Docs: named the local skills used during UI polish: `ui-ux-pro-max`, `impeccable`, `make-interfaces-feel-better`, and `12-principles-of-animation`.
+
+#### Task — design notes
+The README was intentionally written in a prose-heavy, frontend-lead handoff style rather than a terse generated checklist. It avoids dash-heavy formatting, preserves a numbered user flow where sequencing matters, and frames AI as an assistive review and polish tool rather than the owner of the implementation.
+
+#### Files
+`README.md` changed.
+
+Summary: 1 file changed, 99 insertions(+), 21 deletions(-).
+
+#### Tests
+- `git diff --check -- README.md` passed.
+- `npm run lint` passed before the push.
+
+#### Operator follow-up
+None.
+
+#### Related
+Follows skill publication commit `e9a7bd0b07a69604ad05c3b418ee919cd8d09c4e`.
+
 ## 2026-06-25 — third push to origin/main (1 commit)
 
 ### e9a7bd0 — chore: publish local skills
