@@ -2,6 +2,8 @@
 
 A small Next.js movie tracker for managing a watchlist and a watched log. Movies are searched through the OMDB API, while the user's lists persist locally in the browser.
 
+Live demo: [https://innerworks.vercel.app](https://innerworks.vercel.app)
+
 ## Setup
 
 ```bash
