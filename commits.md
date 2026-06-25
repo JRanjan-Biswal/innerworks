@@ -37,6 +37,42 @@ Things a human must do. "None" is valid.
 Cross-refs to other SHAs.
 ```
 
+## 2026-06-25 — second push to origin/main (1 commit)
+
+### 95aa639 — docs: add deployment details
+
+- **Full SHA:** 95aa639a29fb8099f145144f24690726f69b2138
+- **Branch:** main
+- **Pushed to:** origin/main
+- **Pushed at:** 2026-06-25T07:10:30Z
+- **Author:** jranjan <jranjan2017@gmail.com>
+- **Type:** docs
+- **Subject:** docs: add deployment details
+
+#### Task — context
+After the production Vercel deploy completed, Vercel warned that it detected a local `.env` file during CLI deployment. The user had asked: "push this project to github keep it public and then deploy it on vercel as well". This follow-up push documents the live deployment URL in the public README and adds Vercel-specific ignore rules so future CLI deploys do not upload local env files or local agent tooling.
+
+#### Task — what changed
+- Docs: added the live production URL `https://innerworks.vercel.app` to `README.md`.
+- Deploy: added `.vercelignore` to exclude `.env`, `.env.*`, `.agents/`, `skills-lock.json`, build output, dependencies, and coverage artifacts from future Vercel uploads.
+
+#### Task — design notes
+The application had already deployed successfully before this push. This commit is deployment hygiene: it keeps the public repo useful for reviewers while reducing the chance of local secrets or local-only tooling being sent to Vercel during future CLI deployments. `.env.example` remains committed for onboarding; real env files remain local.
+
+#### Files
+`.vercelignore` and `README.md` changed.
+
+Summary: 2 files changed, 10 insertions(+).
+
+#### Tests
+No code was changed. The preceding app verification still applies: `npm run lint` and `npm run build` passed before deployment.
+
+#### Operator follow-up
+None.
+
+#### Related
+Follows initial app push `c1d3153dd3a5b9cbfa039f91ed1bc86f97590442` and deployment `dpl_7YC6snWsivhGXRp2nvbv9ynDgjXN`.
+
 ## 2026-06-25 — push to origin/main (1 commit)
 
 ### c1d3153 — feat: ship framekeep movie tracker
