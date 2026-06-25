@@ -1,8 +1,69 @@
 @import "tailwindcss";
 
+/*
+  Framekeep — dark, cinematic, restrained.
+  One accent (warm gold), neutral surfaces, posters carry the color.
+  All motion is fast (140–280ms), state-conveying, and reduced-motion safe.
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* Surfaces — a near-black projection-room neutral with a faint warm tint */
+  --bg: oklch(0.165 0.006 66);
+  --bg-2: oklch(0.188 0.007 66);
+  --surface: oklch(0.214 0.008 66);
+  --surface-2: oklch(0.252 0.009 66);
+  --surface-3: oklch(0.302 0.01 66);
+
+  /* Text */
+  --ink: oklch(0.965 0.004 85);
+  --ink-soft: oklch(0.862 0.006 80);
+  --muted: oklch(0.706 0.011 76);
+  --faint: oklch(0.582 0.011 72);
+
+  /* Hairlines */
+  --line: oklch(1 0 0 / 0.09);
+  --line-strong: oklch(1 0 0 / 0.16);
+
+  /* Accent — a single warm gold for primary actions, ratings, selection */
+  --accent: oklch(0.808 0.132 79);
+  --accent-strong: oklch(0.856 0.138 81);
+  --accent-ink: oklch(0.235 0.045 72);
+  --accent-quiet: oklch(0.808 0.132 79 / 0.14);
+  --accent-line: oklch(0.808 0.132 79 / 0.42);
+  --accent-ring: oklch(0.808 0.132 79 / 0.45);
+
+  /* Semantic */
+  --danger: oklch(0.7 0.17 22);
+  --danger-quiet: oklch(0.7 0.17 22 / 0.15);
+  --star: var(--accent);
+
+  /* Depth — deeper, softer shadows read as light in a dark room */
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4), 0 4px 12px oklch(0 0 0 / 0.28);
+  --shadow-md: 0 6px 16px oklch(0 0 0 / 0.45), 0 18px 44px oklch(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 30px oklch(0 0 0 / 0.55), 0 40px 90px oklch(0 0 0 / 0.5);
+  --shadow-accent: 0 6px 22px oklch(0.808 0.132 79 / 0.28);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.9, 0.4);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur: 200ms;
+  --dur-slow: 280ms;
+
+  --radius-card: 16px;
+
+  /* Semantic z-index scale — never arbitrary */
+  --z-sticky: 30;
+  --z-backdrop: 50;
+  --z-dialog: 60;
+  --z-toast: 70;
+
+  /* Bridge to Tailwind's theme tokens */
+  --background: var(--bg);
+  --foreground: var(--ink);
 }
 
 @theme inline {
@@ -12,15 +73,216 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  /* One faint, fixed cinema glow — not decoration, just depth */
+  background-image: radial-gradient(
+    115% 62% at 50% -14%,
+    oklch(0.82 0.13 80 / 0.07),
+    transparent 60%
+  );
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+}
+
+button,
+select,
+input,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Consistent, on-brand focus ring across every interactive element */
+:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line);
+  transition-property: transform, box-shadow;
+  transition-duration: var(--dur);
+  transition-timing-function: var(--ease-out);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md), inset 0 0 0 1px var(--line-strong);
+  }
+}
+
+.card:active {
+  transform: translateY(-1px);
+}
+
+/* Poster zoom is tied to the card it lives in */
+.poster-media {
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .card:hover .poster-media {
+    transform: scale(1.06);
+  }
+}
+
+.poster-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Pure-white low-alpha outline so the poster edge reads as an edge, not dirt */
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.1);
+  pointer-events: none;
+}
+
+/* ---------- Segmented nav: the moving pill ---------- */
+
+.nav-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 9999px;
+  background: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(var(--pill-x, 0));
+  width: var(--pill-w, 0);
+}
+
+.nav-pill.is-ready {
+  transition:
+    transform var(--dur-slow) var(--ease-spring),
+    width var(--dur-slow) var(--ease-spring);
+}
+
+/* ---------- Scrollers ---------- */
+
+.scroll-rail {
+  scrollbar-width: none;
+}
+
+.scroll-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Skeleton shimmer (dark) ---------- */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.07), transparent);
+  animation: shimmer 1.25s var(--ease-out) infinite;
+}
+
+/* ---------- Motion keyframes ---------- */
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Page-change transition (applied by app/template.tsx, remounts per route) */
+.route-transition {
+  animation: route-in var(--dur-slow) var(--ease-out) both;
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered item reveal — enhances an always-renderable default */
+.reveal {
+  animation: reveal-in var(--dur) var(--ease-out) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tooltip (mounts on hover/focus; exits instantly on unmount) */
+.tooltip-pop {
+  animation: tooltip-in 140ms var(--ease-out);
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- Reduced motion: collapse all choreography ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .card:hover .poster-media {
+    transform: none;
+  }
 }
