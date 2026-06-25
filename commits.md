@@ -37,6 +37,47 @@ Things a human must do. "None" is valid.
 Cross-refs to other SHAs.
 ```
 
+## 2026-06-25 — third push to origin/main (1 commit)
+
+### e9a7bd0 — chore: publish local skills
+
+- **Full SHA:** e9a7bd0b07a69604ad05c3b418ee919cd8d09c4e
+- **Branch:** main
+- **Pushed to:** origin/main
+- **Pushed at:** 2026-06-25T07:17:10Z
+- **Author:** jranjan <jranjan2017@gmail.com>
+- **Type:** chore
+- **Subject:** chore: publish local skills
+
+#### Task — context
+The user asked: "push the skill files as well and skill json file as well, remove Agents.md and claude.md file from root of the project. also check .env make chages accrodingly in .env.example". The prior push intentionally kept `.agents/` and `skills-lock.json` local, but this request reversed that choice so the installed skills and their lock metadata are now committed to the public repository.
+
+#### Task — what changed
+- Skills: committed the local `.agents/skills/` tree for `ui-ux-pro-max`, `12-principles-of-animation`, `impeccable`, and `make-interfaces-feel-better`.
+- Skills metadata: committed `skills-lock.json` with sources, skill paths, and computed hashes.
+- Root cleanup: removed root `AGENTS.md` and `CLAUDE.md`.
+- Environment docs: updated `.env.example` to include the non-secret `OMDB_URL=https://www.omdbapi.com/` entry alongside the existing blank `OMDB_API_KEY=`.
+- Ignore rules: removed `.agents/` and `skills-lock.json` from `.gitignore`; added Python cache ignores for generated `__pycache__/` and `*.py[cod]` files so compiled cache artifacts are not published.
+
+#### Task — design notes
+The real `.env` remains ignored and was not staged. `.env.example` mirrors the key names from local `.env` without exposing the OMDB API key. The downloaded skill source files were committed mostly verbatim; `git diff --cached --check` reports upstream whitespace issues inside third-party skill data/source files, so those assets were not reformatted to avoid altering vendor content. Generated Python cache files inside the skill folder were intentionally excluded.
+
+#### Files
+`.agents/skills/**`, `.env.example`, `.gitignore`, `skills-lock.json`, `AGENTS.md`, and `CLAUDE.md` changed.
+
+Summary: 146 files changed, 61763 insertions(+), 10 deletions(-).
+
+#### Tests
+- `npm run lint` passed after staging the update.
+- `git diff --cached --check -- .env.example .gitignore AGENTS.md CLAUDE.md skills-lock.json` passed for project-owned changes.
+- Full `git diff --cached --check` was not clean because third-party skill files contain pre-existing trailing whitespace/newline issues; left unchanged intentionally.
+
+#### Operator follow-up
+None.
+
+#### Related
+Follows `95aa639a29fb8099f145144f24690726f69b2138` and `c1d3153dd3a5b9cbfa039f91ed1bc86f97590442`.
+
 ## 2026-06-25 — second push to origin/main (1 commit)
 
 ### 95aa639 — docs: add deployment details
