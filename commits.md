@@ -37,6 +37,46 @@ Things a human must do. "None" is valid.
 Cross-refs to other SHAs.
 ```
 
+## 2026-06-29 — push to origin/main (1 commit)
+
+### 05de84d — fix: center log dialog modals
+
+- **Full SHA:** 05de84df9e009211fe0b6a70bd3829cab9965d22
+- **Branch:** main
+- **Pushed to:** origin/main
+- **Pushed at:** 2026-06-29T06:49:03Z
+- **Author:** jranjan <jranjan2017@gmail.com>
+- **Type:** fix
+- **Subject:** fix: center log dialog modals
+
+#### Task — context
+The user reported a production UI issue on the Vercel deployment: "on this page : https://innerworks.vercel.app/ when i click on the edit button, the modal is not opening properly, rather the modal should be center of the screen. please make sure all the modal are at the center of the screen". The prior dialog behaved like a bottom sheet on smaller viewports and could also be affected by route-level transforms because it rendered inside the app tree instead of at the document root.
+
+#### Task — what changed
+- Web UI: updated `src/components/log-dialog.tsx` so the log/edit dialog is rendered through a React portal into `document.body`.
+- Web UI: changed the modal overlay alignment to center the dialog on every breakpoint rather than bottom-aligning it on mobile.
+- Web UI: added viewport-aware max height and internal scrolling so the centered modal remains usable on shorter screens.
+
+#### Task — design notes
+The portal prevents fixed-position dialog layout from being scoped by transformed route containers. Center alignment is now the single modal behavior across desktop and mobile, which keeps the edit flow visually consistent. The dialog keeps its existing save, cancel, Escape, backdrop-close, rating validation, and note editing behavior unchanged.
+
+#### Files
+`src/components/log-dialog.tsx` changed.
+
+Summary: 1 file changed, 7 insertions(+), 4 deletions(-).
+
+#### Tests
+- `npm run lint` passed.
+- `npm run build` passed.
+- Playwright desktop check passed on `http://localhost:3000/watched`: the edit dialog was mounted under `body`, aligned with `items-center` and `justify-center`, and measured `centerDelta: { x: 0, y: 0 }`.
+- Playwright mobile check passed at 390px by 844px on `http://localhost:3000/watched`: the edit dialog was mounted under `body`, had no horizontal overflow, and measured `centerDelta: { x: 0, y: 0 }`.
+
+#### Operator follow-up
+Deploy the pushed fix to Vercel and smoke test the production URL.
+
+#### Related
+Follows README publication commit `22131d88a4d8789d6a196cab8a765d9fc7706d76`.
+
 ## 2026-06-25 — fourth push to origin/main (1 commit)
 
 ### 22131d8 — docs: expand project readme
