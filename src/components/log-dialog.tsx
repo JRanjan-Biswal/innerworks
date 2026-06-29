@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check, X } from "lucide-react";
 import type { LogDraft, Movie } from "@/types/movie";
 import { RatingControl } from "@/components/rating-control";
@@ -31,10 +32,11 @@ export function LogDialog({ movie, initialDraft, onClose, onSave }: LogDialogPro
 
   const shown = movie ? { movie, initialDraft } : cache;
   if (!mounted || !shown) return null;
+  if (typeof document === "undefined") return null;
 
   const key = `${shown.movie.imdbID}-${shown.initialDraft?.rating ?? "new"}-${shown.initialDraft?.note ?? ""}`;
 
-  return (
+  return createPortal(
     <LogDialogForm
       key={key}
       movie={shown.movie}
@@ -42,7 +44,8 @@ export function LogDialog({ movie, initialDraft, onClose, onSave }: LogDialogPro
       visible={visible}
       onClose={onClose}
       onSave={onSave}
-    />
+    />,
+    document.body,
   );
 }
 
@@ -90,7 +93,7 @@ function LogDialogForm({
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[var(--z-dialog)] flex items-end justify-center bg-[oklch(0_0_0_/_0.62)] p-4 backdrop-blur-md transition-opacity duration-[220ms] ease-out sm:items-center",
+        "fixed inset-0 z-[var(--z-dialog)] flex items-center justify-center bg-[oklch(0_0_0_/_0.62)] p-4 backdrop-blur-md transition-opacity duration-[220ms] ease-out",
         visible ? "opacity-100" : "opacity-0",
       )}
       role="dialog"
@@ -105,7 +108,7 @@ function LogDialogForm({
         tabIndex={-1}
         onSubmit={handleSubmit}
         className={cn(
-          "w-full max-w-lg overflow-hidden rounded-[20px] bg-[var(--surface)] shadow-[var(--shadow-lg)] outline-none ring-1 ring-[var(--line-strong)]",
+          "max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-[20px] bg-[var(--surface)] shadow-[var(--shadow-lg)] outline-none ring-1 ring-[var(--line-strong)]",
           "transition-[transform,opacity] duration-[220ms] ease-out",
           visible ? "translate-y-0 scale-100 opacity-100" : "translate-y-4 scale-95 opacity-0",
         )}
